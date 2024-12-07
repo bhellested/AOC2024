@@ -69,7 +69,6 @@ func main() {
 	var sumPart2 uint64 = 0
 	for i,line := range lines {
 		equations[i] = parseEquation(line)
-		//maxNum = max(maxNum, len(equations[i].nums))
 		if recurse(equations[i], equations[i].nums,false) {
 			sumPart1 += equations[i].solution
 		}
