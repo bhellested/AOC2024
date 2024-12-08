@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 	"strconv"
+	"time"
 	
 )
 
@@ -36,6 +37,8 @@ func parseEquation(line string) Equation {
 func recurse(equation Equation, itemsLeft []uint64,checkConcat bool) bool {
 	if len(itemsLeft) == 1 {
 		return itemsLeft[0] == equation.solution
+	}else if itemsLeft[0] > equation.solution {
+		return false
 	}
 
 	ifAdded := itemsLeft[0] +itemsLeft[1]
@@ -69,14 +72,23 @@ func main() {
 	var sumPart2 uint64 = 0
 	for i,line := range lines {
 		equations[i] = parseEquation(line)
-		if recurse(equations[i], equations[i].nums,false) {
-			sumPart1 += equations[i].solution
-		}
-		if recurse(equations[i], equations[i].nums,true) {
-			sumPart2 += equations[i].solution
-		}
 	}
 
-	fmt.Println("Part 1:", sumPart1)
-	fmt.Println("Part 2:", sumPart2)
+	start := time.Now()
+	for _,equation := range equations {
+		if recurse(equation, equation.nums,false) {
+			sumPart1 += equation.solution
+		}
+	}
+	elapsedPart1 := time.Since(start)
+	
+	start = time.Now()
+	for _,equation := range equations {
+		if recurse(equation, equation.nums,true) {
+			sumPart2 += equation.solution
+		}
+	}
+	elapsedPart2 := time.Since(start)
+	fmt.Println("Part 1:", sumPart1, "(took", elapsedPart1, ")")
+	fmt.Println("Part 2:", sumPart2, "(took", elapsedPart2, ")")
 }
